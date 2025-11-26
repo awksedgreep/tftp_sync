@@ -32,12 +32,20 @@ defmodule TftpSync do
 
   def sync_file(source_dir, api_url, rel_path, opts \\ %{}) do
     full_path = Path.join(source_dir, rel_path)
-    Logger.info("upload #{rel_path}")
 
     if Map.get(opts, :dry_run, false) do
+      Logger.info("upload #{rel_path} (dry run)")
       :ok
     else
-      upload_file(api_url, rel_path, full_path)
+      case upload_file(api_url, rel_path, full_path) do
+        :ok ->
+          Logger.info("upload #{rel_path}")
+          :ok
+
+        {:error, reason} ->
+          Logger.error("upload failed for #{rel_path}: #{inspect(reason)}")
+          {:error, reason}
+      end
     end
   end
 
