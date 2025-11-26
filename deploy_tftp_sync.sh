@@ -20,7 +20,9 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=$APP_DIR
-ExecStart=/usr/bin/env MIX_ENV=prod mix run --no-halt
+Environment=MIX_ENV=prod
+Environment=PATH=/root/.asdf/shims:/root/.asdf/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/root/.asdf/shims/mix run --no-halt
 Restart=always
 RestartSec=5
 
