@@ -21,6 +21,10 @@ defmodule TftpSync.Watcher do
     {:ok, watcher_pid} = FileSystem.start_link(dirs: [abs_source_dir])
     FileSystem.subscribe(watcher_pid)
 
+    # Run initial sync on startup
+    Logger.info("starting initial sync of #{abs_source_dir} to #{api_url}")
+    _ = TftpSync.run_once(abs_source_dir, api_url, opts)
+
     # schedule a daily full resync as a safety net for missed events
     schedule_resync()
 
